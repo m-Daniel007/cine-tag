@@ -1,14 +1,22 @@
 import Banner from "components/Banner";
 import styles from "./Player.module.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Titulo from "components/Titulo";
-import videos from "db.json";
 import { useParams } from "react-router-dom";
 import Pagina404 from "pages/Pagina-404";
 
 export default function Player() {
+  const [video, setVideo] = useState([]);
   const params = useParams();
-  const video = videos.find((video) => video.id === Number(params.id));
+  const url = `https://my-json-server.typicode.com/m-Daniel007/cinetag-api/videos?id=${params.id}`;
+
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((dados) => {
+        setVideo(...dados);
+      });
+  }, []);
 
   if (!video) {
     return <Pagina404 />;
